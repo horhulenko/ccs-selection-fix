@@ -22,7 +22,7 @@ The change comes from the official fix, [eclipse.platform.swt #2694](https://git
 3. Copy this line, paste it into Terminal and press <kbd>Enter</kbd>:
 
    ```bash
-   curl -fsSL https://gitlab.rub.de/artem.h/ccs-selection-fix/-/raw/main/fix-ccs-selection.sh | bash
+   curl -fsSL https://gitlab.rub.de/artem.h/ccs-selection-fix/-/raw/master/fix-ccs-selection.sh?ref_type=heads | bash
    ```
 
 4. Wait until you see **Fixed!** or **All good!**
