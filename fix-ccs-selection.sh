@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# fix-ccs-selection.command
+# fix-ccs-selection.sh
 #
 # Fixes Code Composer Studio (Eclipse based, CCS 12 and similar) on macOS 26.1+,
 # where selected text is not highlighted. Backports the one-line upstream fix
 # (eclipse.platform.swt PR #2694) into the SWT jar CCS already has, because the
 # first SWT release with the fix needs Java 17 and CCS runs on Java 11.
 #
-#   bash fix-ccs-selection.command            fix it
-#   bash fix-ccs-selection.command undo       put the original file back
-#   bash fix-ccs-selection.command <folder>   only touch the CCS in that folder
+#   bash fix-ccs-selection.sh            fix it
+#   bash fix-ccs-selection.sh undo       put the original file back
+#   bash fix-ccs-selection.sh <folder>   only touch the CCS in that folder
 #   curl -fsSL <raw link> | bash              fix it, straight from the web
 #   curl -fsSL <raw link> | bash -s -- undo   undo it, straight from the web
 #
@@ -30,15 +30,15 @@
 case "$0" in
 sh | bash | zsh | dash | */sh | */bash | */zsh | */dash | -*)
 	if [ -t 0 ]; then
-		echo "Please run me like this: bash fix-ccs-selection.command"
+		echo "Please run me like this: bash fix-ccs-selection.sh"
 		return 1 2>/dev/null || exit 1
 	fi
 	CCS_FIX_TMP=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/ccs-fix.XXXXXX") || exit 1
 	trap '/bin/rm -rf "$CCS_FIX_TMP"' 0 1 2 15
-	/bin/cat >"$CCS_FIX_TMP/fix-ccs-selection.command"
-	IFS= read -r CCS_FIX_FIRST <"$CCS_FIX_TMP/fix-ccs-selection.command"
+	/bin/cat >"$CCS_FIX_TMP/fix-ccs-selection.sh"
+	IFS= read -r CCS_FIX_FIRST <"$CCS_FIX_TMP/fix-ccs-selection.sh"
 	if [ "$CCS_FIX_FIRST" = "# ---- fingerprint starts here ----" ]; then
-		/bin/bash "$CCS_FIX_TMP/fix-ccs-selection.command" "$@" </dev/null
+		/bin/bash "$CCS_FIX_TMP/fix-ccs-selection.sh" "$@" </dev/null
 		exit $?
 	fi
 	# Only bash leaves the rest on stdin. Others read ahead, and what is left is
@@ -68,7 +68,7 @@ if [ "$(sed -n '/^# ---- fingerprint starts here ----$/,$p' "$0" | grep -v '^[[:
 	[ -t 1 ] && printf '\033[0m'
 	printf '  CCS was not touched.\n'
 	printf '  This usually happens when I get pasted into an editor.\n'
-	printf '  Get the original fix-ccs-selection.command file and run that one.\n'
+	printf '  Get the original fix-ccs-selection.sh file and run that one.\n'
 	printf '  Used the curl line? Just run it again.\n\n'
 	exit 1
 fi
